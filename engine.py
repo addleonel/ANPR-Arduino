@@ -1,107 +1,132 @@
-from string import hexdigits
+import os
 import cv2
 import numpy as np
 import pytesseract
 from PIL import Image
+import sqlite3
+from datetime import datetime
 
+def run_engine():
+    # Directory to save the captured photos
+    output_dir = "output_photos"
 
-cap = cv2.VideoCapture(0)
-width = 1280
-height = 720
+    # Create the output directory if it doesn't exist
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
 
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+    # Connect to the SQLite database
+    conn = sqlite3.connect('license_plates.db')
+    connexec = conn.cursor()
 
-cText = ''
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-while True:
-    ret, frame = cap.read()
+    # Create the table if it doesn't exist
+    connexec.execute('''CREATE TABLE IF NOT EXISTS plates
+                (id INTEGER PRIMARY KEY AUTOINCREMENT, plate_number TEXT)''')
 
-    if ret == False:
-        break
-    # print(cText)
-    cv2.rectangle(frame, (870, 750), (1070, 850), (0, 0, 0), cv2.FILLED)
-    # cv2.putText(frame, cText[0:7], (900, 810), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 255), 5)
-    cv2.putText(frame, cText[0:7], (45, 90), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 5)
-    
-    al, an, c = frame.shape
+    cap = cv2.VideoCapture(1)
+    width = 1380
+    height = 750
 
-    x1 = int(an/3)
-    x2 = int(x1*2)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
 
-    y1 = int(al/3)
-    y2 = int(y1 * 2)
+    cText = ''
+    pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+    while True:
+        ret, frame = cap.read()
 
-    cv2.rectangle(frame, (x1 + 160, y1 + 500), (1120, 960), (0, 0, 0), cv2.FILLED)
-    cv2.putText(frame, 'Procesing', (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-    # cv2.putText(frame, 'Procesing', (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        if ret == False:
+            break
+        cv2.rectangle(frame, (870, 750), (1070, 850), (58, 252, 61), cv2.FILLED)
+        cv2.putText(frame, "HELLO", (900, 810), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 255), 5)
+        # cv2.putText(frame, cText[0:7], (45, 90), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 5)
+        
+        al, an, c = frame.shape
 
-    cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-    
-    cut = frame[y1:y2, x1:x2]
-    
-    mB = np.matrix(cut[:, :, 0])
-    mG = np.matrix(cut[:, :, 1])
-    mR = np.matrix(cut[:, :, 2])
+        x1 = int(an/6)
+        x2 = int(x1 * 5)
 
-    color = cv2.absdiff(mG, mB)
-    # color = cv2.absdiff(mB, mR)
-    
-    print(color)
-    _, umbral = cv2.threshold(color, 40, 255, cv2.THRESH_BINARY)
+        y1 = int(al/6)
+        y2 = int(y1 * 5)
 
-    contours, _ = cv2.findContours(umbral, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
-    
-    for contour in contours:
-        area = cv2.contourArea(contour)
-        if area > 500 and area < 5000:
-            x, y, w, h = cv2.boundingRect(contour)
+        cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 255, 255), 2)
+        
+        cut = frame[y1:y2, x1:x2]
+        
+        mB = np.matrix(cut[:, :, 0])
+        mG = np.matrix(cut[:, :, 1])
+        mR = np.matrix(cut[:, :, 2])
 
-            xpi = x + x1
-            ypi = y + y1
+        color = cv2.absdiff(mG, mB) # yellow
+        # color = cv2.absdiff(mB, mR)
 
-            xpf = x + w + x1
-            ypf = y + h + y1
+        _, umbral = cv2.threshold(color, 40, 255, cv2.THRESH_BINARY)
 
-            cv2.rectangle(frame, (xpi, ypi), (xpf, ypf), (236, 29, 50), 2)
+        contours, _ = cv2.findContours(umbral, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
+        
+        for contour in contours:
+            area = cv2.contourArea(contour)
+            if area > 100 and area < 6000:
+                x, y, w, h = cv2.boundingRect(contour)
 
-            placa = frame[ypi:ypf, xpi:xpf]
+                xpi = x + x1
+                ypi = y + y1
 
-            hp, wp, cp = placa.shape
+                xpf = x + w + x1
+                ypf = y + h + y1
 
-            Mva = np.zeros((hp, wp))
+                cv2.rectangle(frame, (xpi, ypi), (xpf, ypf), (236, 29, 50), 2)
 
-            mBp = np.matrix(placa[:, :, 0])
-            mGp = np.matrix(placa[:, :, 1])
-            mRp = np.matrix(placa[:, :, 2])
+                placa = frame[ypi:ypf, xpi:xpf]
 
-            for col in range(0, hp):
-                for fil in range(0, wp):
-                    Max = max(mRp[col, fil], mGp[col, fil], mBp[col, fil])
-                    Mva[col,fil] = 255 - Max
+                hp, wp, cp = placa.shape
 
-            _, bin = cv2.threshold(Mva, 150, 255, cv2.THRESH_BINARY)
+                Mva = np.zeros((hp, wp))
 
-            bin = bin.reshape(hp, wp)
-            bin = Image.fromarray(bin)
-            bin = bin.convert("L")
+                mBp = np.matrix(placa[:, :, 0])
+                mGp = np.matrix(placa[:, :, 1])
+                mRp = np.matrix(placa[:, :, 2])
 
-            if hp >= 36 and wp >= 82:
+                for col in range(0, hp):
+                    for fil in range(0, wp):
+                        Max = max(mRp[col, fil], mGp[col, fil], mBp[col, fil])
+                        Mva[col,fil] = 255 - Max
+
+                _, bin = cv2.threshold(Mva, 150, 255, cv2.THRESH_BINARY)
+
+                bin = bin.reshape(hp, wp)
+                bin = Image.fromarray(bin)
+                bin = bin.convert("L")
+
+                # if hp >= 100 and wp >= 200:
+                # if hp >= 40 and wp >= 90:
                 config = '--psm 1'
                 text = pytesseract.image_to_string(bin, config=config)
-
-                if len(text) >= 5:
-                    
+                # count_texts = []
+                if len(text) >= 7:
+                    # Save the frame as an image
                     cText = text
-            
+                    print("License plate detected:", cText)
+                    filename = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+                    output_path = os.path.join(output_dir, f"{filename}.jpg")
+                    cv2.imwrite(output_path, placa)
+                    print("License plate image captured and saved as:", output_path)
+
+                    if cText.strip() == 'AAA-123':
+                        print("Placa encontrada")  
+                    connexec.execute("INSERT INTO plates (plate_number) VALUES (?)", (cText,))
+                    conn.commit()
+                        
+                break
+        cv2.imshow('FALCONI', frame)
+
+        k = cv2.waitKey(1)
+
+        if k == ord('q'):
             break
-    cv2.imshow('vehicle', frame)
 
-    k = cv2.waitKey(1)
+    cap.release()
+    cv2.destroyAllWindows()
 
-    if k == ord('q'):
-        break
-
-cap.release()
-cv2.destroyAllWindows()
+if __name__ == "__main__":
+    run_engine()
