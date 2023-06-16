@@ -5,24 +5,25 @@ import pytesseract
 from PIL import Image
 import sqlite3
 from datetime import datetime
+from massif.controller import led
 
 def run_engine():
     # Directory to save the captured photos
-    output_dir = "output_photos"
+    output_dir = "../output_photos"
 
     # Create the output directory if it doesn't exist
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
     # Connect to the SQLite database
-    conn = sqlite3.connect('license_plates.db')
+    conn = sqlite3.connect('../license_plates.db')
     connexec = conn.cursor()
 
     # Create the table if it doesn't exist
     connexec.execute('''CREATE TABLE IF NOT EXISTS plates
                 (id INTEGER PRIMARY KEY AUTOINCREMENT, plate_number TEXT)''')
 
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
     width = 1380
     height = 750
 
@@ -55,7 +56,7 @@ def run_engine():
         mB = np.matrix(cut[:, :, 0])
         mG = np.matrix(cut[:, :, 1])
         mR = np.matrix(cut[:, :, 2])
-
+        
         color = cv2.absdiff(mG, mB) # yellow
         # color = cv2.absdiff(mB, mR)
 
@@ -113,7 +114,8 @@ def run_engine():
                     print("License plate image captured and saved as:", output_path)
 
                     if cText.strip() == 'AAA-123':
-                        print("Placa encontrada")  
+                        print("Placa encontrada")
+                        led()
                     connexec.execute("INSERT INTO plates (plate_number) VALUES (?)", (cText,))
                     conn.commit()
                         

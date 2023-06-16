@@ -1,0 +1,18 @@
+Propietario:
+  - Nombre
+  - Apellidos
+  - DNI
+  - Fecha de nacimiento
+  - Dirección
+  - Teléfono
+  - Email
+
+Datos de automóvil:
+  - Matrícula (clave primaria)
+  - Marca
+  - Fecha de registro
+  - Fecha de última revisión
+  - Número de puertas
+  - Tipo de vehículo
+  - Color
+  - Descripción
