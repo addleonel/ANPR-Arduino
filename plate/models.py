@@ -21,12 +21,12 @@ class PlateModel(models.Model):
         self.save()
 
     def __str__(self):
-        return self.name
+        return self.license_plate
     
     def get_absolute_url(self):
         return reverse('plate:plate', kwargs={'slug': self.slug })
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            self.slug = slugify(self.license_plate)
         return super().save(*args, **kwargs)

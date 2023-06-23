@@ -1,10 +1,10 @@
 from rest_framework import serializers
 
-from plate.models import Plate
+from plate.models import PlateModel
 
 class PlateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Plate
+        model = PlateModel
         fields = [
             'id',
             'user',
