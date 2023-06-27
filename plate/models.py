@@ -7,7 +7,7 @@ from django.template.defaultfilters import slugify
 
 class PlateModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    license_plate = models.CharField(max_length=255, blank=True)
+    license_plate = models.CharField(max_length=255, blank=False, null=False, unique=True)
     brand = models.CharField(max_length=255, blank=True)
     color = models.CharField(max_length=255, blank=True)    
     description = models.TextField(blank=True)
