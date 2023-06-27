@@ -5,7 +5,8 @@ import pytesseract
 from PIL import Image
 import sqlite3
 from datetime import datetime
-from massif.controller import led
+from consume import make_match
+from controller import turn_on_led
 
 def run_engine():
     # Directory to save the captured photos
@@ -113,9 +114,12 @@ def run_engine():
                     cv2.imwrite(output_path, placa)
                     print("License plate image captured and saved as:", output_path)
 
-                    if cText.strip() == 'AAA-123':
+                    if make_match(cText.strip()):  # make match with the database
                         print("Placa encontrada")
-                        led()
+                        cv2.putText(frame, "ENCONTRADO", (45, 90), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 5)
+                        # turn_on_led(True)
+                    # else:
+                        # turn_on_led(False)
                     connexec.execute("INSERT INTO plates (plate_number) VALUES (?)", (cText,))
                     conn.commit()
                         
