@@ -18,6 +18,9 @@ def run_engine():
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
+    if not os.path.exists(output_dir_car):
+        os.makedirs(output_dir_car)     
+
     # Connect to the SQLite database
     conn = sqlite3.connect('../license_plates.db')
     connexec = conn.cursor()
@@ -113,9 +116,14 @@ def run_engine():
                     cText = text
                     # turn_on_led('DETECTED')
                     print("License plate detected:", cText)
+                    # license
                     filename = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
                     output_path = os.path.join(output_dir, f"{filename}.jpg")
                     cv2.imwrite(output_path, placa)
+                    # car
+                    filename_car = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+                    output_path_car = os.path.join(output_dir_car, f"{filename_car}.jpg")
+                    cv2.imwrite(output_path_car, frame)
                     print("License plate image captured and saved as:", output_path)
 
                     if make_match(cText.strip()):  # make match with the database

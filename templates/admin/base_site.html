@@ -1,0 +1,12 @@
+{% extends "admin/base.html" %}
+
+{% block title %}FALCONI{% endblock %}
+
+{% block branding %}
+  <p style="font-weight:bold;">FALCONI</p>
+{% if user.is_anonymous %}
+  {% include "admin/color_theme_toggle.html" %}
+{% endif %}
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
