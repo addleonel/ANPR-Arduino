@@ -6,9 +6,8 @@
 
 <h1> List </h1>
 {% for plate in plates_captured%}
-
     <div class="card" style="width: 18rem;">
-        <img src="{{plate.image_license.url}}" class="card-img-top" alt="...">
+        <img src="{{ plate.image_license.url}}" class="card-img-top" alt="...">
         <div class="card-body">
             <h5 class="card-title">Plate: {{plate.plate}}</h5>
             <a href="#" class="btn btn-primary">Go somewhere</a>
@@ -16,8 +15,8 @@
     </div>
 
     <div class="card" style="width: 18rem;">
-      <img src="{{plate.image_car.url}}" class="card-img-top" alt="...">
-  </div>
+      <img src="{{plate.image_car.url }}" class="card-img-top" alt="...">
+    </div>
 {% endfor %}
 
 {% endblock content%}

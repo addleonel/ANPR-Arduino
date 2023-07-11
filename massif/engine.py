@@ -5,7 +5,7 @@ import pytesseract
 from PIL import Image
 import sqlite3
 from datetime import datetime
-from consume import is_banned, make_match
+from consume import is_banned, make_match, post_captured_plates
 # from controller import turn_on_led
 from camera import cameras
 
@@ -116,15 +116,30 @@ def run_engine():
                     cText = text
                     # turn_on_led('DETECTED')
                     print("License plate detected:", cText)
+
                     # license
                     filename = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
                     output_path = os.path.join(output_dir, f"{filename}.jpg")
                     cv2.imwrite(output_path, placa)
+                    
                     # car
                     filename_car = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
                     output_path_car = os.path.join(output_dir_car, f"{filename_car}.jpg")
                     cv2.imwrite(output_path_car, frame)
-                    print("License plate image captured and saved as:", output_path)
+
+                    files = {
+                        'image_license': open(output_path, 'rb'), 
+                        'image_car': open(output_path_car, 'rb')   
+                    }
+                    
+                    data = {
+                        'plate': cText,
+                    }
+                    
+                    post_captured_plates(files, data)
+
+                    # os.remove(output_path)
+                    # os.remove(output_path_car)
 
                     if make_match(cText.strip()):  # make match with the database
                         cv2.putText(frame, "ENCONTRADO", (45, 90), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 5)

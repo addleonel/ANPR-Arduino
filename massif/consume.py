@@ -44,6 +44,19 @@ def is_banned(license_plate):
   return 'License plate not found'
 
 
+def post_captured_plates(files, data):
+  # Send a POST request to the API endpoint with the file data and form data
+  upload_url = base_url + 'plate_captured/'
+  response = requests.post(upload_url, files=files, data=data)
+
+  # Check the response status code
+  if response.status_code == 201:
+      # Image upload successful
+      print('Image uploaded successfully!')
+      print('Image URL:', response.json()['image_license'])
+  else:
+      # Image upload failed
+      print('Image upload failed:', response.text)
 
 if __name__ == '__main__':
   input_license_plate =input('Enter a license plate: ')

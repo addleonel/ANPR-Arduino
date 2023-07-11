@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from plate.models import PlateModel
+from plate.models import PlateModel, PlateCapturedModel
 
 class PlateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,6 +13,19 @@ class PlateSerializer(serializers.ModelSerializer):
             'color',
             'status',
             'description',
-            'created_date',
             'image',
+            'created_at',
+            'updated_at',
+        ]
+
+class PlateCapturedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlateCapturedModel
+        fields = [
+            'id',
+            'plate',
+            'image_license',
+            'image_car',
+            'created_at',
+            'updated_at',
         ]
