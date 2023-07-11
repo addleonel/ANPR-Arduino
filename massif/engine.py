@@ -5,12 +5,14 @@ import pytesseract
 from PIL import Image
 import sqlite3
 from datetime import datetime
-from consume import make_match
-from controller import turn_on_led
+from consume import is_banned, make_match
+# from controller import turn_on_led
+from camera import cameras
 
 def run_engine():
     # Directory to save the captured photos
-    output_dir = "../output_photos"
+    output_dir = "../output_photo/plate"
+    output_dir_car = "../output_photo/car"
 
     # Create the output directory if it doesn't exist
     if not os.path.exists(output_dir):
@@ -24,7 +26,7 @@ def run_engine():
     connexec.execute('''CREATE TABLE IF NOT EXISTS plates
                 (id INTEGER PRIMARY KEY AUTOINCREMENT, plate_number TEXT)''')
 
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(cameras[0]["ip"])
     width = 1380
     height = 750
 
@@ -105,9 +107,11 @@ def run_engine():
                 config = '--psm 1'
                 text = pytesseract.image_to_string(bin, config=config)
                 # count_texts = []
+                # turn_on_led('NOT DETECTED')
                 if len(text) >= 7:
                     # Save the frame as an image
                     cText = text
+                    # turn_on_led('DETECTED')
                     print("License plate detected:", cText)
                     filename = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
                     output_path = os.path.join(output_dir, f"{filename}.jpg")
@@ -115,11 +119,16 @@ def run_engine():
                     print("License plate image captured and saved as:", output_path)
 
                     if make_match(cText.strip()):  # make match with the database
-                        print("Placa encontrada")
                         cv2.putText(frame, "ENCONTRADO", (45, 90), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 5)
-                        # turn_on_led(True)
-                    # else:
-                        # turn_on_led(False)
+                        if is_banned(cText.strip()):  # check if the license plate is banned
+                            # turn_on_led('BANNED')
+                            print("Placa Baneada")
+                            cv2.putText(frame, "BANEADO", (45, 150), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 5)
+                        else:
+                            # turn_on_led('ADMITED')
+                            print("Placa Admitida")
+                            cv2.putText(frame, "ADMITIDO", (45, 150), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 5)
+
                     connexec.execute("INSERT INTO plates (plate_number) VALUES (?)", (cText,))
                     conn.commit()
                         

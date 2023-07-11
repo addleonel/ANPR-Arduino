@@ -11,6 +11,7 @@ class PlateSerializer(serializers.ModelSerializer):
             'license_plate',
             'brand',
             'color',
+            'status',
             'description',
             'created_date',
             'image',

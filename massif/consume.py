@@ -32,6 +32,19 @@ def make_match(license_plate):
     return True
   return False
 
+def is_banned(license_plate):
+  """
+  check if the license plate is banned
+  """
+  if make_match(license_plate):
+    data = get_license_plate(license_plate)
+    if data['status'] == 'BANNED':
+      return True
+    return False
+  return 'License plate not found'
+
+
+
 if __name__ == '__main__':
   input_license_plate =input('Enter a license plate: ')
-  print(make_match(input_license_plate))
+  print(is_banned(input_license_plate))
