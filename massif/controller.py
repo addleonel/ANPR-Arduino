@@ -8,8 +8,6 @@ board=Arduino(comport)
 led_1=board.get_pin('d:13:o')
 led_2=board.get_pin('d:12:o')
 led_3=board.get_pin('d:8:o')
-# pin_7=board.get_pin('d:7:o')
-# led_5=board.get_pin('d:4:o')
 
 def turn_on_led(status):
     if status=='BANNED':

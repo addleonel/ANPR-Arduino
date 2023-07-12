@@ -6,7 +6,7 @@ def home(request):
     return render(request, 'plate/plate_home.html')
 
 def plate_list(request):
-    plates_captured = PlateCapturedModel.objects.all()
+    plates_captured = PlateCapturedModel.objects.all().order_by('-created_at')
 
     context = {
         'plates_captured': plates_captured,
