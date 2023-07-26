@@ -1,0 +1,12 @@
+.body-container { 
+  padding-top: 100px;
+}
+
+.info-tags {
+  font-size: 12px;
+  font-weight: bold;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background-color: #eeeeee;
+  text-align: center;
+}

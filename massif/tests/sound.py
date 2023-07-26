@@ -2,7 +2,7 @@ import time
 import pyfirmata
 
 # Set the port to match your Arduino board
-port = 'COM6'
+port = 'COM5'
 
 # Create a new board instance
 board = pyfirmata.Arduino(port)
@@ -15,6 +15,7 @@ led_1=board.get_pin('d:13:o')
 it = pyfirmata.util.Iterator(board)
 it.start()
 
+print('Reading sound sensor')
 # Read sound sensor data in a loop
 try:
     while True:
@@ -22,7 +23,7 @@ try:
         sound_value = sound_pin.read()
         if sound_value is not None:
             print("Sound sensor value:", sound_value)
-            if sound_value > 0.6:
+            if sound_value > 0.64:
                 led_1.write(1)
                 time.sleep(3)
             else:

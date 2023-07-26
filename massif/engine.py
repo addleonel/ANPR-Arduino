@@ -1,12 +1,13 @@
 import os
 import cv2
 import numpy as np
+import time
 import pytesseract
 from PIL import Image
 import sqlite3
 from datetime import datetime
 from consume import is_banned, make_match, post_captured_plates
-# from controller import turn_on_led
+from controller import turn_on_led, sound_pin, led_4
 from camera import cameras
 
 def run_engine():
@@ -39,6 +40,15 @@ def run_engine():
     cText = ''
     pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
     while True:
+
+        sound_value = sound_pin.read()
+        if sound_value is not None:
+            print("Sound sensor value:", sound_value)
+            if sound_value > 0.64:
+                led_4.write(1)
+                time.sleep(3)
+            else:
+                led_4.write(0)
         ret, frame = cap.read()
 
         if ret == False:
@@ -110,11 +120,11 @@ def run_engine():
                 config = '--psm 1'
                 text = pytesseract.image_to_string(bin, config=config)
                 # count_texts = []
-                # turn_on_led('NOT DETECTED')
+                turn_on_led('NOT DETECTED')
                 if len(text) >= 7:
                     # Save the frame as an image
                     cText = text
-                    # turn_on_led('DETECTED')
+                    turn_on_led('DETECTED')
                     print("License plate detected:", cText)
 
                     # license
@@ -144,11 +154,11 @@ def run_engine():
                     if make_match(cText.strip()):  # make match with the database
                         cv2.putText(frame, "ENCONTRADO", (45, 90), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 5)
                         if is_banned(cText.strip()):  # check if the license plate is banned
-                            # turn_on_led('BANNED')
+                            turn_on_led('BANNED')
                             print("Placa Baneada")
                             cv2.putText(frame, "BANEADO", (45, 150), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 5)
                         else:
-                            # turn_on_led('ADMITED')
+                            turn_on_led('ADMITED')
                             print("Placa Admitida")
                             cv2.putText(frame, "ADMITIDO", (45, 150), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 5)
 

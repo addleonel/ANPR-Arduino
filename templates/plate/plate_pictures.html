@@ -1,68 +1,83 @@
 {% extends "plate/plate_base.html" %}
+{% load static %}
 
-{% block title%}Captured{%endblock title%}
-
+{% block title%}Matrículas{%endblock title%}
+{% block links%} 
+    <link rel="stylesheet" href="{% static 'css/plate_pictures.css' %}">
+{% endblock links %}
 {% block content%}
 
-<div class="container text-center">
-    
-    <table class="table table-striped">
-        <thead>
+<div class="body-container">
+    <div class="container text-center">
+        
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Caracteres</th>
+                    <th scope="col">Matrícula</th>
+                    <th scope="col">Vista amplia</th>
+                    <th scope="col">Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for plate in plates_captured%}
             <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Caracteres</th>
-                <th scope="col">Matrícula</th>
-                <th scope="col">Vista amplia</th>
+                <th scope="row">{{plate.id}}</th>
+                <td><h5 class="card-title">{{plate.plate}}</h5></td>
+                <td>
+                    <button data-bs-toggle="modal" data-bs-target="#{{plate.id}}-license">
+                        <img src="{{ plate.image_license.url}}" class="img-fluid" alt="">
+                    </button>
+                </td>
+                <td>
+                    <button data-bs-toggle="modal" data-bs-target="#{{plate.id}}-car">
+                        <img src="{{plate.image_car.url }}" style="max-width:100px;" class="img-fluid" alt="">
+                    </button>
+                </td>
+                <td>
+                    <p>{{plate.created_at}}</p>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-        {% for plate in plates_captured%}
-        <tr>
-            <th scope="row">{{plate.id}}</th>
-            <td><h5 class="card-title">{{plate.plate}}</h5></td>
-            <td>
-                <button data-bs-toggle="modal" data-bs-target="#{{plate.id}}-license">
-                    <img src="{{ plate.image_license.url}}" class="img-fluid" alt="">
-                </button>
-            </td>
-            <td>
-                <button data-bs-toggle="modal" data-bs-target="#{{plate.id}}-car">
-                    <img src="{{plate.image_car.url }}" style="max-width:200px;" class="img-fluid" alt="">
-                </button>
-            </td>
-        </tr>
 
-        
-        
-        <!-- Modal -->
-        <div class="modal fade" id="{{plate.id}}-license" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Matrícula</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <img src="{{ plate.image_license.url}}" style="width: 100%;" class="img-fluid" alt="">
-                </div>
-            </div>
-            </div>
-        </div>
-        <div class="modal fade" id="{{plate.id}}-car" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Vista amplia</h1>
+            <!-- Modal -->
+            <div class="modal fade" id="{{plate.id}}-license" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Matrícula</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            <span class="info-tags">id: {{plate.id}}</span>
+                            <span class="info-tags">Matrícula: {{plate.plate}}</span>
+                        </p>
+                        <img src="{{ plate.image_license.url}}" style="width: 100%;" class="img-fluid" alt="">
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <img src="{{plate.image_car.url }}" style="width: 100%;" class="img-fluid" alt="">
                 </div>
             </div>
+            <div class="modal fade" id="{{plate.id}}-car" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Vista amplia</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            <span class="info-tags">id: {{plate.id}}</span>
+                            <span class="info-tags">Matrícula: {{plate.plate}}</span>
+                        </p>
+                        <img src="{{plate.image_car.url }}" style="width: 100%;" class="img-fluid" alt="">
+                    </div>
+                </div>
+                </div>
             </div>
-        </div>
-        {% endfor %}
-        </tbody>
-    </table>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock content%}

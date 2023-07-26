@@ -1,21 +1,23 @@
-<div style="background-color:#417690;">
+{% load static %}
+{% block links %}
+  <link href="{% static 'css/navbar.css' %}" rel="stylesheet" type="text/css">
+{% endblock links%}
+<div class="navbar-container">
 <div class="container">
-  <nav class="navbar navbar-expand-lg" style="color:#f7f7f7;">
+  <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-      <a href="{% url 'plate:plate_home' %}"><p class="navbar-brand"  style="color:#f7f7f7;font-weight:bold;" >FALCONI</p></a>
+      <a href="{% url 'plate:plate_home' %}" class="navbar-logo"><p>FALCONI</p></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
           <li class="nav-item">
-            
-            <a style="color:#f7f7f7;" class="nav-link" href="{% url 'admin:index' %}"><p>admin</p></a>
+            <a class="nav-link navbar-links" href="{% url 'admin:index' %}"><p>admin</p></a>
           </li>
           <li class="nav-item">
-            <a style="color:#f7f7f7;" class="nav-link" href="{% url 'plate:plate_list' %}"><p>Ver Matrículas</p></a>
+            <a class="nav-link navbar-links" href="{% url 'plate:plate_list' %}"><p>Ver Matrículas</p></a>
           </li>
-          
         </ul>
       </div>
     </div>

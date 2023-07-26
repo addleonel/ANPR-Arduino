@@ -1,0 +1,31 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.home-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.look-license {
+  background-color: #000;
+  color: #fff;
+  padding: 20px 30px;
+  font-weight: bold;
+  font-size: 20px;
+  border-radius: 10px;
+}
+
+.image-home {
+  width: 100%;
+}
+
+.home-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 300px;
+}
