@@ -1,6 +1,4 @@
-
 from django.urls import path
-
 from plate.views import home, plate_list
 
 app_name = 'plate'

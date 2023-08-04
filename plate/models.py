@@ -5,6 +5,9 @@ from django.template.defaultfilters import slugify
 
 
 class PlateModel(models.Model):
+    """
+    Model for plates
+    """
     OPTIONS = [
         ('ADMITED', 'admited'),
         ('BANNED', 'banned'),
@@ -37,6 +40,9 @@ class PlateModel(models.Model):
 
 
 class PlateCapturedModel(models.Model):
+    """
+    Model for captured plates
+    """
     plate = models.CharField(max_length=255, blank=True, null=True)
     image_license = models.ImageField(
         upload_to='img/plate_captured/', blank=True, null=True, max_length=300)

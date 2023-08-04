@@ -1,10 +1,10 @@
 import os
-import cv2
-import numpy as np
 import time
-import pytesseract
-from PIL import Image
 import sqlite3
+import cv2
+import pytesseract
+import numpy as np
+from PIL import Image
 from datetime import datetime
 from consume import is_banned, make_match, post_captured_plates
 from controller import turn_on_led, sound_pin, led_4
@@ -58,7 +58,6 @@ def run_engine():
                       (58, 252, 61), cv2.FILLED)
         cv2.putText(frame, "HELLO", (900, 810),
                     cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 255), 5)
-        # cv2.putText(frame, cText[0:7], (45, 90), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 5)
 
         al, an, c = frame.shape
 
@@ -77,7 +76,6 @@ def run_engine():
         mR = np.matrix(cut[:, :, 2])
 
         color = cv2.absdiff(mG, mB)  # yellow
-        # color = cv2.absdiff(mB, mR)
 
         _, umbral = cv2.threshold(color, 40, 255, cv2.THRESH_BINARY)
 

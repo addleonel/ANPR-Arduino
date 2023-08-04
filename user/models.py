@@ -9,6 +9,9 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Profile(models.Model):
+    """
+    Model for user profile
+    """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, blank=True)
     surname = models.CharField(max_length=255, blank=True)

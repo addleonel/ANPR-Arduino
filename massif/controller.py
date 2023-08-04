@@ -1,4 +1,3 @@
-import time
 from pyfirmata import Arduino
 import pyfirmata
 

@@ -1,10 +1,10 @@
 import os
-import cv2
-import numpy as np
-import pytesseract
 import time
-from PIL import Image
 import sqlite3
+import cv2
+import pytesseract
+import numpy as np
+from PIL import Image
 from datetime import datetime
 from consume import is_banned, make_match, post_captured_plates
 from controller import turn_on_led

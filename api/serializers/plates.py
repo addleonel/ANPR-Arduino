@@ -1,9 +1,11 @@
 from rest_framework import serializers
-
 from plate.models import PlateModel, PlateCapturedModel
 
 
 class PlateSerializer(serializers.ModelSerializer):
+    """
+    Serializer for PlateModel
+    """
     class Meta:
         model = PlateModel
         fields = [
@@ -21,6 +23,9 @@ class PlateSerializer(serializers.ModelSerializer):
 
 
 class PlateCapturedSerializer(serializers.ModelSerializer):
+    """
+    Serializer for PlateCapturedModel
+    """
     class Meta:
         model = PlateCapturedModel
         fields = [
