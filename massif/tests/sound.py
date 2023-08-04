@@ -9,7 +9,7 @@ board = pyfirmata.Arduino(port)
 
 # Define the pin connected to the sound sensor
 sound_pin = board.get_pin('a:0:i')  # Analog pin 0, input mode
-led_1=board.get_pin('d:13:o')
+led_1 = board.get_pin('d:13:o')
 
 # Start an iterator thread to read analog values from the board
 it = pyfirmata.util.Iterator(board)

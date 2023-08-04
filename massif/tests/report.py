@@ -4,6 +4,7 @@ from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet
 
+
 def create_pdf_report(pdf_file_path, report_data):
     # Create a PDF document
     doc = SimpleDocTemplate(pdf_file_path, pagesize=letter)
@@ -16,7 +17,8 @@ def create_pdf_report(pdf_file_path, report_data):
     text_style = getSampleStyleSheet()["BodyText"]
     title_text = "Report Title"
     elements.append(Paragraph(title_text, title_style))
-    elements.append(Paragraph("clksndklnclknsldkc slkndcklnsd, sldknclksdnc\n", text_style))
+    elements.append(
+        Paragraph("clksndklnclknsldkc slkndcklnsd, sldknclksdnc\n", text_style))
     elements.append(Paragraph("\n", text_style))
     # Add a table with the report data
     data = [
@@ -39,17 +41,18 @@ def create_pdf_report(pdf_file_path, report_data):
     table = Table(data)
     table.setStyle(table_style)
     times = 3
-    for i in range(times): 
-      elements.append(table)
+    for i in range(times):
+        elements.append(table)
 
     # Add other content to the report as needed
 
     # Build the PDF document
     doc.build(elements)
 
+
 if __name__ == "__main__":
-  # Example usage
-  report_data = {...}  # Your report data goes here
-  filename='report.pdf'
-  pdf_file_path = os.getcwd() + f'\\{filename}'
-  create_pdf_report(pdf_file_path, report_data)
+    # Example usage
+    report_data = {...}  # Your report data goes here
+    filename = 'report.pdf'
+    pdf_file_path = os.getcwd() + f'\\{filename}'
+    create_pdf_report(pdf_file_path, report_data)

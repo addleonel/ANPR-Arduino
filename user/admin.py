@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from user.models import Profile
 
+
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = (
@@ -17,5 +18,6 @@ class ProfileAdmin(admin.ModelAdmin):
         'country',
         'picture',
     )
-    search_fields = ('user', 'name', 'surname', 'dni', 'address', 'email', 'phone', 'city', 'country')
+    search_fields = ('user', 'name', 'surname', 'dni',
+                     'address', 'email', 'phone', 'city', 'country')
     list_filter = ('user',)

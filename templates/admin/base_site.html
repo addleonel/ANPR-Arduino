@@ -1,12 +1,5 @@
-{% extends "admin/base.html" %}
-
-{% block title %}FALCONI{% endblock %}
-
-{% block branding %}
-  <a style="font-weight:bold;" href="{% url 'plate:plate_home' %}"s>FALCONI</a>
-{% if user.is_anonymous %}
-  {% include "admin/color_theme_toggle.html" %}
-{% endif %}
-{% endblock %}
-
-{% block nav-global %}{% endblock %}
+{% extends "admin/base.html" %} {% block title %}FALCONI{% endblock %} {% block
+branding %}
+<a style="font-weight: bold" href="{% url 'plate:plate_home' %}" s>FALCONI</a>
+{% if user.is_anonymous %} {% include "admin/color_theme_toggle.html" %} {%
+endif %} {% endblock %} {% block nav-global %}{% endblock %}

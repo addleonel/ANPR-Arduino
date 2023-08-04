@@ -8,4 +8,3 @@ urlpatterns = [
     path('', home, name='plate_home'),
     path('list/', plate_list, name='plate_list'),
 ]
-

@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from plate.models import PlateModel, PlateCapturedModel
 
+
 class PlateSerializer(serializers.ModelSerializer):
     class Meta:
         model = PlateModel
@@ -17,6 +18,7 @@ class PlateSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         ]
+
 
 class PlateCapturedSerializer(serializers.ModelSerializer):
     class Meta:

@@ -1,18 +1,17 @@
-Propietario:
-  - Nombre
-  - Apellidos
-  - DNI
-  - Fecha de nacimiento
-  - Dirección
-  - Teléfono
-  - Email
+Owner:
+   - Name
+   - Surnames
+   - ID
+   - Birthdate
+   - Address
+   - Phone
+   - Email
 
-Datos de automóvil:
-  - Matrícula (clave primaria)
-  - Marca
-  - Fecha de registro
-  - Fecha de última revisión
-  - Número de puertas
-  - Tipo de vehículo
-  - Color
-  - Descripción
+Car data:
+   - License plate (primary key)
+   - Brand
+   - Registration date
+   - Last revision date
+   - Vehicle type
+   - Color
+   - Description

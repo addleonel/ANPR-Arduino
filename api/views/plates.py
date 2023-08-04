@@ -7,6 +7,7 @@ from django.http import Http404
 from plate.models import PlateModel, PlateCapturedModel
 from api.serializers.plates import PlateSerializer, PlateCapturedSerializer
 
+
 class PlateListView(generics.ListCreateAPIView):
     """
     List all plates, or create a new plate.
@@ -14,6 +15,7 @@ class PlateListView(generics.ListCreateAPIView):
     queryset = PlateModel.objects.all()
     serializer_class = PlateSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
 
 class PlateDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -40,25 +42,29 @@ class PlateByLicenseDetailAPIView(APIView):
 
     def get(self, request, license_plate, format=None):
         plate = self.get_plate_object(license_plate=license_plate)
-        serializer = self.serializer_class(instance=plate, context={'request': request})
+        serializer = self.serializer_class(
+            instance=plate, context={'request': request})
         return Response(serializer.data)
-    
+
     def put(self, request, license_plate, format=None):
         plate = self.get_plate_object(license_plate=license_plate)
-        serializer = self.serializer_class(plate, request.data, context={'request': request})
+        serializer = self.serializer_class(
+            plate, request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
     def patch(self, request, license_plate, format=None):
         plate = self.get_plate_object(license_plate=license_plate)
-        serializer = self.serializer_class(plate, request.data, partial=True, context={'request': request})
+        serializer = self.serializer_class(
+            plate, request.data, partial=True, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+
 class PlateCapturedListView(APIView):
     """
     List all  captured plates, or create a new plate.
@@ -68,15 +74,18 @@ class PlateCapturedListView(APIView):
 
     def get(self, request, slug=None, format=None):
         plates = PlateCapturedModel.objects.all()
-        serializer = self.serializer_class(plates, many=True, context={'request': request})
+        serializer = self.serializer_class(
+            plates, many=True, context={'request': request})
         return Response(serializer.data)
 
     def post(self, request, slug=None, format=None):
-        serializer = self.serializer_class(data=request.data, context={'request': request})
+        serializer = self.serializer_class(
+            data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class PlateCapturedDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -94,20 +103,23 @@ class PlateCapturedDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get(self, request, pk, format=None):
         plate = self.get_plate_object(pk=pk)
-        serializer = self.serializer_class(instance=plate, context={'request': request})
+        serializer = self.serializer_class(
+            instance=plate, context={'request': request})
         return Response(serializer.data)
-    
+
     def put(self, request, pk, format=None):
         plate = self.get_plate_object(pk=pk)
-        serializer = self.serializer_class(plate, request.data, context={'request': request})
+        serializer = self.serializer_class(
+            plate, request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
     def patch(self, request, pk, format=None):
         plate = self.get_plate_object(pk=pk)
-        serializer = self.serializer_class(plate, request.data, partial=True, context={'request': request})
+        serializer = self.serializer_class(
+            plate, request.data, partial=True, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

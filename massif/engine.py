@@ -10,6 +10,7 @@ from consume import is_banned, make_match, post_captured_plates
 from controller import turn_on_led, sound_pin, led_4
 from camera import cameras
 
+
 def run_engine():
     # Directory to save the captured photos
     output_dir = "../output_photo/plate"
@@ -20,7 +21,7 @@ def run_engine():
         os.makedirs(output_dir)
 
     if not os.path.exists(output_dir_car):
-        os.makedirs(output_dir_car)     
+        os.makedirs(output_dir_car)
 
     # Connect to the SQLite database
     conn = sqlite3.connect('../license_plates.db')
@@ -53,10 +54,12 @@ def run_engine():
 
         if ret == False:
             break
-        cv2.rectangle(frame, (870, 750), (1070, 850), (58, 252, 61), cv2.FILLED)
-        cv2.putText(frame, "HELLO", (900, 810), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 255), 5)
+        cv2.rectangle(frame, (870, 750), (1070, 850),
+                      (58, 252, 61), cv2.FILLED)
+        cv2.putText(frame, "HELLO", (900, 810),
+                    cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 255), 5)
         # cv2.putText(frame, cText[0:7], (45, 90), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 5)
-        
+
         al, an, c = frame.shape
 
         x1 = int(an/6)
@@ -66,21 +69,23 @@ def run_engine():
         y2 = int(y1 * 5)
 
         cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 255, 255), 2)
-        
+
         cut = frame[y1:y2, x1:x2]
-        
+
         mB = np.matrix(cut[:, :, 0])
         mG = np.matrix(cut[:, :, 1])
         mR = np.matrix(cut[:, :, 2])
-        
-        color = cv2.absdiff(mG, mB) # yellow
+
+        color = cv2.absdiff(mG, mB)  # yellow
         # color = cv2.absdiff(mB, mR)
 
         _, umbral = cv2.threshold(color, 40, 255, cv2.THRESH_BINARY)
 
-        contours, _ = cv2.findContours(umbral, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
-        
+        contours, _ = cv2.findContours(
+            umbral, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        contours = sorted(
+            contours, key=lambda x: cv2.contourArea(x), reverse=True)
+
         for contour in contours:
             area = cv2.contourArea(contour)
             if area > 100 and area < 6000:
@@ -107,7 +112,7 @@ def run_engine():
                 for col in range(0, hp):
                     for fil in range(0, wp):
                         Max = max(mRp[col, fil], mGp[col, fil], mBp[col, fil])
-                        Mva[col,fil] = 255 - Max
+                        Mva[col, fil] = 255 - Max
 
                 _, bin = cv2.threshold(Mva, 150, 255, cv2.THRESH_BINARY)
 
@@ -131,40 +136,45 @@ def run_engine():
                     filename = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
                     output_path = os.path.join(output_dir, f"{filename}.jpg")
                     cv2.imwrite(output_path, placa)
-                    
+
                     # car
                     filename_car = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
-                    output_path_car = os.path.join(output_dir_car, f"{filename_car}.jpg")
+                    output_path_car = os.path.join(
+                        output_dir_car, f"{filename_car}.jpg")
                     cv2.imwrite(output_path_car, frame)
 
                     files = {
-                        'image_license': open(output_path, 'rb'), 
-                        'image_car': open(output_path_car, 'rb')   
+                        'image_license': open(output_path, 'rb'),
+                        'image_car': open(output_path_car, 'rb')
                     }
-                    
+
                     data = {
                         'plate': cText,
                     }
-                    
+
                     post_captured_plates(files, data)
 
                     # os.remove(output_path)
                     # os.remove(output_path_car)
 
                     if make_match(cText.strip()):  # make match with the database
-                        cv2.putText(frame, "ENCONTRADO", (45, 90), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 5)
+                        cv2.putText(frame, "ENCONTRADO", (45, 90),
+                                    cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 5)
                         if is_banned(cText.strip()):  # check if the license plate is banned
                             turn_on_led('BANNED')
                             print("Placa Baneada")
-                            cv2.putText(frame, "BANEADO", (45, 150), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 5)
+                            cv2.putText(frame, "BANEADO", (45, 150),
+                                        cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 5)
                         else:
                             turn_on_led('ADMITED')
                             print("Placa Admitida")
-                            cv2.putText(frame, "ADMITIDO", (45, 150), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 5)
+                            cv2.putText(frame, "ADMITIDO", (45, 150),
+                                        cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 5)
 
-                    connexec.execute("INSERT INTO plates (plate_number) VALUES (?)", (cText,))
+                    connexec.execute(
+                        "INSERT INTO plates (plate_number) VALUES (?)", (cText,))
                     conn.commit()
-                        
+
                 break
         cv2.imshow('FALCONI', frame)
 
@@ -175,6 +185,7 @@ def run_engine():
 
     cap.release()
     cv2.destroyAllWindows()
+
 
 if __name__ == "__main__":
     run_engine()

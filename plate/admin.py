@@ -1,6 +1,7 @@
 from django.contrib import admin
 from plate.models import PlateModel,  PlateCapturedModel
 
+
 @admin.register(PlateModel)
 class PlateAdmin(admin.ModelAdmin):
     list_display = (
@@ -14,6 +15,7 @@ class PlateAdmin(admin.ModelAdmin):
     )
     search_fields = ('user', 'license', 'brand', 'color', 'status',)
     list_filter = ('user',)
+
 
 @admin.register(PlateCapturedModel)
 class PlateCapturedAdmin(admin.ModelAdmin):
