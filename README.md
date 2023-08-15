@@ -111,4 +111,5 @@ python engine.py
 
 The following video shows the results. An entertaining video about the project
 
-[![An entertaining video about the project](https://img.youtube.com/vi/7bi59xWkrVs/0.jpg)](https://www.youtube.com/watch?v=7bi59xWkrVs)
+[![An entertaining video about the project](https://img.youtube.com/vi/7bi59xWkrVs/0.jpg)](https://www.youtube.com/watch?v=7bi59xWkrVs) <img src="https://github.com/addleonel/ANPR-Arduino/blob/main/docs/results.gif" alt="gif" width="520" height="360"> 
+
